@@ -78,8 +78,8 @@ const FooterSection = () => {
         </div>
       </div>
 
-      <div className="h-[35px] flex items-center justify-center text-black bg-white text-center">
-        <div className="flex items-center justify-between w-full max-w-[1536px] mx-auto md:px-[100px] px-[24px]">
+      <div className="flex items-center justify-center text-black bg-white text-center">
+        <div className="flex flex-wrap items-center justify-center sm:justify-between gap-4 w-full max-w-[1536px] mx-auto md:px-[100px] px-[24px] py-2">
         <span className="font-semibold">
           © {(new Date()).getFullYear()} keizerworks. All rights reserved.
         </span>
