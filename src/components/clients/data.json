@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Day 1 · Brief",
+    "description": "Share your goals and product details. Make sure we're a good fit.",
+    "color": "blue-400"
+  },
+  {
+    "title": "Day 2 · Book",
+    "description": "Pay upfront, secure your spot and lock in your price.",
+    "color": "yellow-400"
+  },
+  {
+    "title": "Week 2 to 3 · Design Delivery",
+    "description": "We create your custom MVP design, a front-end prototype.",
+    "color": "green-400"
+  },
+  {
+    "title": "Week 3 to 8 · Product Delivery",
+    "description": "Receive your working customer-ready MVP.",
+    "color": "violet-400"
+  }
+]

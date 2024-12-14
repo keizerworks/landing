@@ -27,7 +27,7 @@ html {
 }
 
 .flex-center {
-  @apply items-center justify-center
+  @apply items-center justify-center;
 }
 
 .dot-grid {
