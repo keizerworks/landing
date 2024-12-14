@@ -1,3 +1,6 @@
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+
 interface StrategyCardProps {
   number: string;
   label: string;
@@ -12,6 +15,8 @@ const StrategyCard = ({
   label,
   title,
   description,
+  linkText = "Read More",
+  linkHref = "#",
 }: StrategyCardProps) => {
   return (
     <div className="relative md:w-[284px] w-full mx-auto flex flex-col justify-between">
@@ -28,6 +33,14 @@ const StrategyCard = ({
           {description}
         </p>
       </div>
+
+      <Link
+        href={linkHref}
+        className="inline-flex text-[14px] w-fit pt-[20px] items-center text-neutral-300  hover:border-white pb-1 hover:opacity-80 transition-all group"
+      >
+        {linkText}
+        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+      </Link>
     </div>
   );
 };

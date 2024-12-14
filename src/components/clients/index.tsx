@@ -1,5 +1,6 @@
 import Image from "next/image";
 import RoadmapElement from "../ui/roadmap";
+import data from "./data.json";
 
 const ClientSection = () => {
   return (
@@ -34,27 +35,17 @@ const ClientSection = () => {
             The Roadmap
           </h3>
           <div className="flex flex-col flex-nowrap items-start">
-            <RoadmapElement
-              title="Day 1 · Brief"
-              description="Share your goals and product details. Make sure were a good fit."
-              indicatorClass="!bg-blue-400"
-            />
-            <RoadmapElement
-              title="Day 2 · Book"
-              description="Pay upfront, secure your spot and lock in your price."
-              indicatorClass="!bg-yellow-400"
-            />
-            <RoadmapElement
-              title="Week 2 to 3 · Design Delivery"
-              description="We create your custom MVP design, a front-end prototype."
-              indicatorClass="!bg-green-400"
-            />
-            <RoadmapElement
-              title="Week 3 to 8 · Product Delivery"
-              description="Receive your working customer ready MVP."
-              indicatorClass="!bg-violet-400"
-              endElement
-            />
+            {
+              data.map((item, index) => (
+                <RoadmapElement
+                  key={index}
+                  title={item.title}
+                  description={item.description}
+                  color={item.color}
+                  endElement={index === data.length - 1}
+                />
+              ))
+            }
           </div>
         </div>
         <div className="md:w-[640px] w-full md:text-[20px] mt-[24px]  md:leading-[24px] leading-[18px] md:mt-0 text-[15px] flex items-center justify-center">
