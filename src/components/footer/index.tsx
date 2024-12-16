@@ -16,6 +16,12 @@ const FooterSection = () => {
     { label: "Twitter", href: "https://x.com/keizerHq" },
   ];
 
+  const policyLinks = [
+    { label: "Terms Of Service", href: "#" },
+    { label: "Privacy Policy", href: "#" },
+    { label: "Cookies", href: "#" },
+  ]
+
   return (
     <footer id="footer" className="text-white">
       <div className="max-w-[1536px] mx-auto md:px-[100px] px-[24px] py-[60px]">
@@ -72,8 +78,19 @@ const FooterSection = () => {
         </div>
       </div>
 
-      <div className="h-[35px] flex items-center font-semibold justify-center text-white bg-[#2d2dc3] text-center">
-        © keizerworks 2024 All rights reserved
+      <div className="flex items-center justify-center text-black bg-white text-center">
+        <div className="flex flex-wrap items-center justify-center sm:justify-between gap-4 w-full max-w-[1536px] mx-auto md:px-[100px] px-[24px] py-2">
+        <span className="font-semibold">
+          © {(new Date()).getFullYear()} keizerworks. All rights reserved.
+        </span>
+        <ul className="flex gap-6 text-sm font-medium">
+          {policyLinks.map((link) => (
+            <li key={link.label}>
+              <Link href={link.href}>{link.label}</Link>
+            </li>
+          ))}
+        </ul>
+        </div>
       </div>
     </footer>
   );
