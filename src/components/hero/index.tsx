@@ -6,7 +6,7 @@ const HeroSection = () => {
   return (
     <div
       id="hero"
-      className="h-auto pb-[100px] overflow-hidden relative w-full bg-primary"
+      className="h-auto overflow-hidden relative w-full bg-primary"
     >
       <div className="mx-auto max-w-[1536px]">
         <div className="dot-grid " />
