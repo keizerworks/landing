@@ -94,7 +94,7 @@ const StrategySection = () => {
             asChild
             className="bg-white text-[16px] mt-[38px] text-black hover:bg-white/90 text-lg font-semibold rounded-[4px] px-[18px] py-[24px]"
           >
-            <Link href="/contact" className="flex items-center group gap-2">
+            <Link href="#contact" className="flex items-center group gap-2">
               Contact Us
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 group-hover:opacity-100 opacity-60 transition-all" />
             </Link>

@@ -11,7 +11,7 @@ const Navbar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
   const [openSideBar, setOpenSideBar] = useState(false);
-  const links = ["Our Projects", "Services", "News", "About Us", "Contact"];
+  const links = ["Our Projects", "Services", "News", "About Us"];
 
   useEffect(() => {
     const handleScroll = () => {

@@ -11,12 +11,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: process.env.NEXT_PUBLIC_BASE_URL
-    ? new URL(process.env.NEXT_PUBLIC_BASE_URL)
-    : new URL("https://keizerworks.com"),
-  title: "keizer Works — BUILD | GROW | CONNECT",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL || "https://keizerworks.com",
+  ),
+  title: "Keizer - Build. Grow. Connect.",
   description:
-    "Unleashing Creativity Across Digital Platforms. From stunning websites to immersive games and motion graphics, we bring your vision to life with cutting-edge design and development.",
+    "Unleashing Creativity Across Digital Platforms. From stunning websites to immersive games and software solutions, we bring your vision to life with cutting-edge design and development.",
   keywords: [
     "web development",
     "game development",
@@ -32,17 +32,32 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    title: "keizer Works — BUILD | GROW | CONNECT",
+    url: "https://keizerworks.com",
+    title: "KeizerWorks - Build. Grow. Connect",
     description: "Unleashing Creativity Across Digital Platforms",
     siteName: "Keizer",
-    images: [{ url: "/opengraph-image.png" }], 
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Keizer Works",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "keizer Works — BUILD | GROW | CONNECT",
+    title: "Keizer Works — BUILD | GROW | CONNECT",
     description: "Unleashing Creativity Across Digital Platforms",
-    creator: "@keizerHQ",
-    images: ["/opengraph-image.png"], 
+    creator: "@keizer",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Keizer Works",
+      },
+    ],
   },
 };
 
