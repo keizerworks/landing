@@ -71,8 +71,8 @@ const ContactForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     setSendingEmail(true);
+    setErrors({});
     e.preventDefault();
-
     setSubmitStatus(null);
 
     if (validateForm()) {
@@ -112,6 +112,8 @@ const ContactForm: React.FC = () => {
       } finally {
         setSendingEmail(false);
       }
+    } else {
+      setSendingEmail(false);
     }
   };
 
