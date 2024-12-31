@@ -2,8 +2,10 @@
 
 import type React from "react";
 import { useEffect, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { z } from "zod";
+import { AnimatePresence, motion } from "motion/react";
+import { Button } from "../ui/button";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -125,9 +127,9 @@ const ContactForm: React.FC = () => {
           onChange={handleChange}
           value={formData.name}
           type="text"
-          placeholder="NAME"
+          placeholder="Enter your name"
           disabled={sendingEmail}
-          className="w-full md:py-[30px] py-[20px] placeholder:text-white/50 bg-transparent border-b border-white text-white placeholder-white uppercase focus:outline-none"
+          className="w-full md:py-[30px] py-[20px] placeholder:text-white/50 bg-transparent border-b border-white text-white placeholder-white focus:outline-none"
         />
         {errors.name && (
           <p className="text-white text-sm flex items-center gap-3 pt-2  mt-1">
@@ -142,9 +144,9 @@ const ContactForm: React.FC = () => {
           onChange={handleChange}
           value={formData.email}
           type="email"
-          placeholder="EMAIL"
+          placeholder="Enter your email"
           disabled={sendingEmail}
-          className="w-full md:py-[30px] py-[20px] bg-transparent border-b placeholder:text-white/50 border-white text-white placeholder-white uppercase focus:outline-none"
+          className="w-full md:py-[30px] py-[20px] bg-transparent border-b placeholder:text-white/50 border-white text-white placeholder-white focus:outline-none"
         />
         {errors.email && (
           <p className="text-white text-sm  flex items-center gap-3 pt-2 mt-1">
@@ -159,9 +161,9 @@ const ContactForm: React.FC = () => {
           onChange={handleChange}
           value={formData.company}
           type="text"
-          placeholder="COMPANY"
+          placeholder="Enter your company name"
           disabled={sendingEmail}
-          className="w-full md:py-[30px] py-[20px] bg-transparent border-b placeholder:text-white/50 border-white text-white placeholder-white uppercase focus:outline-none"
+          className="w-full md:py-[30px] py-[20px] bg-transparent border-b placeholder:text-white/50 border-white text-white placeholder-white focus:outline-none"
         />
         {errors.company && (
           <p className="text-white text-sm  flex items-center gap-3 pt-2 mt-1">
@@ -175,10 +177,10 @@ const ContactForm: React.FC = () => {
           name="project"
           onChange={handleChange}
           value={formData.project}
-          placeholder="PROJECT"
+          placeholder="Enter your project name"
           rows={1}
           disabled={sendingEmail}
-          className="w-full md:py-[30px] py-[20px] pr-[20px] bg-transparent border-b placeholder:text-white/50 border-white text-white placeholder-white uppercase focus:outline-none"
+          className="w-full md:py-[30px] py-[20px] pr-[20px] bg-transparent border-b placeholder:text-white/50 border-white text-white placeholder-white focus:outline-none"
         />
         {errors.project && (
           <p className="text-white text-sm flex items-center gap-3 pt-2  mt-1">
@@ -201,17 +203,39 @@ const ContactForm: React.FC = () => {
           {submitStatus.message}
         </div>
       )}
-      <button
-        disabled={sendingEmail}
+      <Button
+        size={"lg"}
         type="submit"
-        className="md:text-[18px] text-[15px] md:h-[50px] md:w-[177px] w-full h-[45px] group flex items-center justify-center placeholder:text-white/50 text-white bg-black rounded-[4px] mt-[60px]"
+        disabled={sendingEmail}
+        className="flex md:text-lg md:px-6 mt-10 items-center justify-center px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
       >
-        <span className="mr-2">{sendingEmail ? "Sending..." : "Send"}</span>
-        <ArrowRight
-          size={20}
-          className="group-hover:translate-x-1 transition-all"
-        />
-      </button>
+        <div className="flex items-center text-neutral-300">
+          <span className="mr-2">{sendingEmail ? "Sending" : "Send"}</span>
+          <AnimatePresence mode="wait" initial={false}>
+            {sendingEmail ? (
+              <motion.div
+                key="loader"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Loader2 size={20} className="animate-spin" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="arrow"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ArrowRight size={20} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </Button>
     </form>
   );
 };
