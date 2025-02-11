@@ -7,12 +7,15 @@ import AboutSection from "~/components/about";
 import ContactSection from "~/components/contact";
 import NewsLetter from "~/components/newsletter";
 import FAQ from "~/components/faq";
+import { gotham_font, spaceGrotesk } from "~/config/font";
 
 export default function Home() {
   return (
-    <main>
+    <main
+      className={`${gotham_font.variable} ${spaceGrotesk.variable} bg-black`}
+    >
       <HeroSection />
-      <ClientSection />
+      {/* <ClientSection /> */}
       <ProjectSection />
       <StrategySection />
       <NewsSection />

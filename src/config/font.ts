@@ -1,4 +1,5 @@
 import { DM_Mono, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 
 export const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -12,4 +13,10 @@ export const dmMono = DM_Mono({
   weight: ["300", "400", "500"],
   display: "swap",
   variable: "--font-dm-mono",
+});
+
+export const gotham_font= localFont({
+  src: "./Gotham-Bold.otf",
+  display: "swap",
+  variable: "--font-gb",
 });

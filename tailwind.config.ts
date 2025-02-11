@@ -1,12 +1,13 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
-import roadmapData from './src/components/clients/data.json';
+import roadmapData from "./src/components/clients/data.json";
 
 // return ["bg-" + item.color, "text-" + item.color];
-const staticColors = roadmapData.map((item) => {
-  return ["bg-" + item.color, "to-" + item.color];
-}).flat();
-
+const staticColors = roadmapData
+  .map((item) => {
+    return ["bg-" + item.color, "to-" + item.color];
+  })
+  .flat();
 
 const config: Config = {
   darkMode: ["class"],
@@ -18,7 +19,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-space-grotesk)"],
+        gb: ["var(--font-gb)"],
+        sg: ["var(--font-space-grotesk)"],
         mono: ["var(--font-dm-mono)"],
       },
       perspective: {
@@ -39,10 +41,10 @@ const config: Config = {
       },
       keyframes: {
         ping: {
-          '75%, 100%' : {
-            transform: 'scale(2)',
-            opacity: '0',
-          }
+          "75%, 100%": {
+            transform: "scale(2)",
+            opacity: "0",
+          },
         },
         spotlight: {
           "0%": {
@@ -164,7 +166,7 @@ const config: Config = {
             animationTimingFunction: value,
           }),
         },
-        { values: theme("transitionTimingFunction") },
+        { values: theme("transitionTimingFunction") }
       );
     }),
   ],
