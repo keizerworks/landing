@@ -200,9 +200,9 @@ const HeroSection = () => {
         >
           <div className="absolute -bottom-1 -left-1 w-full h-full bg-white z-0"></div>
           <div className="absolute group-active:translate-y-1 group-active:-translate-x-1 transition-all inset-0 bg-[#2d2dc3] z-10"></div>
-          <span className="relative inline-block transition-all  duration-300 z-20 group-active:-translate-x-1 group-active:translate-y-1">
+          <a href="#contact" className="relative inline-block transition-all  duration-300 z-20 group-active:-translate-x-1 group-active:translate-y-1">
             Request a Demo
-          </span>
+          </a>
         </motion.button>
       </div>
       <motion.div

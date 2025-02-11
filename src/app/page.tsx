@@ -8,6 +8,7 @@ import ContactSection from "~/components/contact";
 import NewsLetter from "~/components/newsletter";
 import FAQ from "~/components/faq";
 import { gotham_font, spaceGrotesk } from "~/config/font";
+import WhyKeizer from "~/components/why-keizer";
 
 export default function Home() {
   return (
@@ -15,7 +16,7 @@ export default function Home() {
       className={`${gotham_font.variable} ${spaceGrotesk.variable} bg-black`}
     >
       <HeroSection />
-      {/* <ClientSection /> */}
+      <WhyKeizer />
       <ProjectSection />
       <StrategySection />
       <NewsSection />
