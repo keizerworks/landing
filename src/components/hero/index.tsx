@@ -55,6 +55,11 @@ const AnimatedText = ({ text, delay = 0 }: AnimatedTextProps) => {
 const HeroSection = () => {
   const firstLineDelay = 0;
   const secondLineDelay = 0.5;
+  const firstLoadDelay = 2.4;
+
+  const [allowUnderlineAnimation, setAllowUnderlineAnimation] =
+    useState<boolean>(false);
+
   // Calculate total animation time for text + a small buffer
   const textAnimationDuration = 1.0; // Approximate time for text animation
   const underlineDelay = firstLineDelay + textAnimationDuration;
@@ -66,25 +71,36 @@ const HeroSection = () => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      visionControls.start({
-        width: "100%",
-        opacity: 1,
-        transition: { duration: 0.3 },
-      });
+      if (allowUnderlineAnimation) {
+        visionControls.start({
+          width: "100%",
+          opacity: 1,
+          transition: { duration: 0.3 },
+        });
+      }
     }, underlineDelay * 1000);
 
     return () => clearTimeout(timeout);
-  }, [visionControls, underlineDelay]);
+  }, [visionControls, underlineDelay, allowUnderlineAnimation]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setAllowUnderlineAnimation(true);
+    }, firstLoadDelay);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <section
       id="hero"
-      className="max-h-[800px] overflow-hidden relative flex items-start max-w-[1536px] mx-auto pt-[200px] md:px-24 px-4 h-screen bg-black w-full"
+      className="md:max-h-[800px] md:h-screen overflow-hidden relative flex md:flex-row flex-col items-start md:max-w-[1536px] mx-auto md:pt-[200px] pt-[100px] pb-[100px] md:px-24 px-4  bg-black w-full"
     >
       <div className="font-gb relative text-white w-full">
         <h1
-          className="flex flex-col items-start text-8xl leading-[1.2] relative"
+          className="flex flex-col gap-2 items-start lg:text-8xl md:text-6xl text-5xl  leading-[1.2] relative"
           onMouseEnter={async () => {
+            if (!allowUnderlineAnimation) return;
             cursorPositionY.set(180);
             await visionControls.start({
               width: 0,
@@ -97,6 +113,7 @@ const HeroSection = () => {
             });
           }}
           onMouseLeave={async () => {
+            if (!allowUnderlineAnimation) return;
             cursorPositionY.set(60);
             await missionControls.start({
               width: 0,
@@ -110,11 +127,11 @@ const HeroSection = () => {
           }}
         >
           <span>
-            <AnimatedText text="Your " delay={firstLineDelay} />
+            <AnimatedText text="Your" delay={firstLineDelay} />{" "}
             <span className="inline-block relative">
               <AnimatedText text="Vision" delay={firstLineDelay + 0.2} />
               <motion.span
-                className="absolute inline-block left-0 bottom-0 bg-[#ff66ff] h-2"
+                className="absolute translate-y-1 inline-block left-0 bottom-0 bg-[#ff66ff] h-2"
                 initial={{ width: 0, opacity: 0 }}
                 animate={visionControls}
                 transition={{
@@ -122,6 +139,7 @@ const HeroSection = () => {
                   ease: "easeOut",
                 }}
               />
+              <FloatingLabelNormal />
             </span>
           </span>
           <span>
@@ -129,7 +147,7 @@ const HeroSection = () => {
             <span className="inline-block relative">
               <AnimatedText text="Mission" delay={secondLineDelay + 0.2} />
               <motion.span
-                className="absolute inline-block left-0 bottom-0 bg-[#ff66ff] h-2"
+                className="absolute translate-y-1 inline-block left-0 bottom-0 bg-[#ff66ff] h-2"
                 initial={{ width: 0, opacity: 0 }}
                 animate={missionControls}
                 transition={{
@@ -142,6 +160,7 @@ const HeroSection = () => {
 
           <FloatingLabel labelDelay={labelDelay} cursorY={cursorPositionY} />
         </h1>
+
         <motion.p
           initial={{ opacity: 0, y: 50 }}
           animate={{
@@ -155,10 +174,10 @@ const HeroSection = () => {
             damping: 12,
             mass: 0.1,
           }}
-          className="font-sg font-medium text-lg mt-8"
+          className="font-sg font-medium md:text-lg text-sm mt-8"
         >
           We are the trusted partner for startups and businesses, offering{" "}
-          <br />
+          <br className="md:inline-block hidden" />
           innovative solutions that turn your ideas into impactful realities
         </motion.p>
         <motion.div
@@ -179,7 +198,7 @@ const HeroSection = () => {
           <img
             src="/assets/decoration/decoration.svg"
             alt=""
-            className="h-full w-full"
+            className="h-full w-full md:scale-100 scale-75"
           />
         </motion.div>
 
@@ -196,11 +215,14 @@ const HeroSection = () => {
             damping: 12,
             mass: 0.1,
           }}
-          className="font-sg translate-x-1 font-medium mt-8 group relative text-white px-4 text-lg py-2"
+          className="font-sg translate-x-1 font-medium mt-8 group relative text-white px-4 md:text-lg py-2"
         >
           <div className="absolute -bottom-1 -left-1 w-full h-full bg-white z-0"></div>
           <div className="absolute group-active:translate-y-1 group-active:-translate-x-1 transition-all inset-0 bg-[#2d2dc3] z-10"></div>
-          <a href="#contact" className="relative inline-block transition-all  duration-300 z-20 group-active:-translate-x-1 group-active:translate-y-1">
+          <a
+            href="#contact"
+            className="relative inline-block transition-all  duration-300 z-20 group-active:-translate-x-1 group-active:translate-y-1"
+          >
             Request a Demo
           </a>
         </motion.button>
@@ -226,7 +248,7 @@ const HeroSection = () => {
           className="h-full w-full"
         />
       </motion.div>
-      <div className="relative flex-shrink-0 w-[412px] aspect-square">
+      <div className="relative md:ml-0 md:mx-0 mx-auto mt-[50px] flex-shrink-0 md:w-[412px] w-[380px] aspect-square">
         <motion.img
           initial={{ opacity: 0, y: 14, x: -14 }}
           animate={{
@@ -275,7 +297,7 @@ const HeroSection = () => {
             damping: 12,
             mass: 0.1,
           }}
-          className="inset-0 absolute z-0 -translate-x-6 translate-y-6 bg-[#1e96fc]"
+          className="inset-0 absolute z-0  -translate-x-6 translate-y-6 bg-[#1e96fc]"
         />
       </div>
     </section>
@@ -291,12 +313,14 @@ const FloatingLabel: React.FC<FloatingLabelProps> = ({
   const x = useSpring(mouseX, { damping: 25, stiffness: 150 });
   const y = useSpring(cursorY, { damping: 25, stiffness: 150 });
 
-  const randomStart = {
-    x: Math.random() * window.innerWidth - 250,
-    y: Math.random() * window.innerHeight - 100,
-  };
+  const [randomStart, setRandomStart] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
+    setRandomStart({
+      x: Math.random() * window.innerWidth - 250,
+      y: Math.random() * window.innerHeight - 100,
+    });
+    
     const handleMouseMove = (e: MouseEvent) => {
       const deltaX = (e.clientX - window.innerWidth / 2) * 0.02;
       mouseX.set(500 + deltaX);
@@ -334,7 +358,49 @@ const FloatingLabel: React.FC<FloatingLabelProps> = ({
         ease: ["easeOut", "easeOut", "easeInOut"],
       }}
       style={{ x, y }}
-      className="absolute"
+      className="absolute hidden md:inline-block"
+    >
+      <motion.span
+        animate={floatingAnimation}
+        className="text-sm inline-block px-4 py-0.5 bg-[#ff66ff] text-[#383A48] border-2 border-[#383A48]"
+      >
+        <span>
+          <span className="inline-block relative h-full w-full">
+            Keizer
+            <span className="absolute -top-6 -left-10">
+              <CursorIcon />
+            </span>
+          </span>
+        </span>
+      </motion.span>
+    </motion.div>
+  );
+};
+
+const FloatingLabelNormal = () => {
+  const floatingAnimation = {
+    y: [0, -6, 0],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  };
+
+  return (
+    <motion.div
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+      transition={{
+        delay: 2,
+        duration: 0.5,
+        ease: "easeOut",
+      }}
+      className="absolute md:hidden inline-block translate-x-[20%] top-[90%]"
     >
       <motion.span
         animate={floatingAnimation}

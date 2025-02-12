@@ -9,7 +9,7 @@ const ContactSection = () => {
             <span className="uppercase font-semibold text-xs">
               Collaboration
             </span>
-            <h2 className="md:text-[54px] mt-8 px-2 pb-4 relative font-bold pt-[15px] text-[32px] md:leading-[102%]">
+            <h2 className="md:text-[54px] leading-[32px] mt-8 px-2 pb-4 relative font-bold pt-[15px] text-[32px] md:leading-[102%]">
               <span className="relative z-40 text-black">
                 Have a Vision?
                 <br />

@@ -7,6 +7,10 @@ body {
   background-color: black;
 }
 
+span {
+  display: inline-block;
+}
+
 :root {
   --font-gb: var(--font-gb);
 }

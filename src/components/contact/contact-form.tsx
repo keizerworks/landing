@@ -120,7 +120,7 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full pt-[60px]">
+    <form onSubmit={handleSubmit} className="w-full">
       <div className="mb-6">
         <input
           name="name"
