@@ -33,7 +33,7 @@ const ContactForm: React.FC = () => {
   } | null>(null);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -120,7 +120,7 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full pt-[60px]">
+    <form onSubmit={handleSubmit} className="w-full">
       <div className="mb-6">
         <input
           name="name"
@@ -203,14 +203,18 @@ const ContactForm: React.FC = () => {
           {submitStatus.message}
         </div>
       )}
-      <Button
-        size={"lg"}
+
+      <button
         type="submit"
         disabled={sendingEmail}
-        className="flex md:text-lg md:px-6 mt-10 items-center justify-center px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+        className="font-sg translate-x-1 font-medium mt-8 group relative text-white px-4 text-lg py-2"
       >
+        <div className="absolute -bottom-1 -left-1 w-full h-full bg-white z-0"></div>
+        <div className="absolute group-active:translate-y-1 group-active:-translate-x-1 transition-all inset-0 bg-black z-10"></div>
         <div className="flex items-center text-neutral-300">
-          <span className="mr-2">{sendingEmail ? "Sending" : "Send"}</span>
+          <span className="relative inline-block transition-all  duration-300 z-20 group-active:-translate-x-1 group-active:translate-y-1">
+            {sendingEmail ? "Sending" : "Send"}
+          </span>
           <AnimatePresence mode="wait" initial={false}>
             {sendingEmail ? (
               <motion.div
@@ -219,8 +223,12 @@ const ContactForm: React.FC = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
+                className="relative z-40 ml-2 
+                "
               >
-                <Loader2 size={20} className="animate-spin" />
+                <span className="relative inline-block transition-all  duration-300 z-20 group-active:-translate-x-1 group-active:translate-y-1">
+                  <Loader2 size={20} className="animate-spin" />
+                </span>
               </motion.div>
             ) : (
               <motion.div
@@ -229,13 +237,16 @@ const ContactForm: React.FC = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
+                className="relative z-40 translate-y-1 ml-2"
               >
-                <ArrowRight size={20} />
+                <span className="relative inline-block transition-all  duration-300 z-20 group-active:-translate-x-1 group-active:translate-y-1">
+                  <ArrowRight size={20} />
+                </span>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-      </Button>
+      </button>
     </form>
   );
 };

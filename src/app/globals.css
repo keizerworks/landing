@@ -4,7 +4,15 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-color: rgb(26, 26, 26);
+  background-color: black;
+}
+
+span {
+  display: inline-block;
+}
+
+:root {
+  --font-gb: var(--font-gb);
 }
 
 ::selection {
