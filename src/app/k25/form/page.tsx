@@ -118,12 +118,12 @@ export default function ApplicationForm() {
           </div>
           
           {/* Desktop Contact Button */}
-          <button className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm lg:text-[17px] font-medium">
-            Need help? Contact us
+          <a href="mailto:biz@keizerworks.com" className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm lg:text-[17px] font-medium">
+            Need help?
             <span className="bg-black px-2 lg:px-3 py-1.5 lg:py-2 rounded-lg">
               <Image src={"/assets/k25/k.svg"} alt='k25' width={20} height={28} className="lg:w-6 lg:h-[35px]" /> 
             </span>     
-          </button>
+          </a>
 
           {/* Mobile Menu Button */}
           <button 
@@ -248,9 +248,11 @@ export default function ApplicationForm() {
                   required
                 >
                   <option value="" disabled>Select your preferred role</option>
-                  <option value="ai-ml">AI/ML Developer</option>
-                  <option value="frontend">Frontend Developer</option>
-                  <option value="backend">Backend Developer</option>
+                  <option value="backend">Ui/Ux Designer</option>
+                  <option value="frontend">Frontend Engineer</option>
+                  <option value="backend">Backend Engineer</option>
+                  <option value="backend">Full Stack Engineer</option>
+                  <option value="ai-ml">AI/ML Engineer</option>
                 </select>
               </div>
 
