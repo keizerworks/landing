@@ -25,6 +25,8 @@ export default $config({
         EMAIL: process.env.EMAIL!,
         EMAIL_APP_PASSWORD: process.env.EMAIL_APP_PASSWORD!,
         NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL!,
+        NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       },
     });
   },
