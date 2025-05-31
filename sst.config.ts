@@ -15,7 +15,7 @@ export default $config({
         $app.stage === "production"
           ? {
               name: "keizerworks.com",
-              redirects: ["www.keizerworks.com"],
+              // redirects: ["www.keizerworks.com"],
               dns: sst.cloudflare.dns(),
             }
           : undefined,
