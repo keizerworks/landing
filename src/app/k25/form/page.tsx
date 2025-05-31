@@ -225,7 +225,7 @@ export default function ApplicationForm() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-600 mb-1">Compensation</label>
-                  <p className="text-gray-900">$500.00</p>
+                  <p className="text-gray-900">50k</p>
                 </div>
               </div>
             </div>
