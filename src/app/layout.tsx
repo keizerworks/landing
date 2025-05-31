@@ -69,9 +69,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${dmMono.variable}`}>
       <body className="font-sans antialiased dark bg-background">
-        <Navbar />
+        
         {children}
-        <FooterSection />
+        
       </body>
     </html>
   );

@@ -8,12 +8,15 @@ import NewsLetter from "~/components/newsletter";
 import FAQ from "~/components/faq";
 import { gotham_font, spaceGrotesk } from "~/config/font";
 import WhyKeizer from "~/components/why-keizer";
+import Navbar from "~/components/ui/navbar";
+import FooterSection from "~/components/footer";
 
 export default function Home() {
   return (
     <main
       className={`${gotham_font.variable} ${spaceGrotesk.variable} overflow-hidden bg-black`}
     >
+      <Navbar />
       <HeroSection />
       <WhyKeizer />
       <ProjectSection />
@@ -23,6 +26,7 @@ export default function Home() {
       <ContactSection />
       <FAQ />
       <NewsLetter />
+      <FooterSection />
     </main>
   );
 }
