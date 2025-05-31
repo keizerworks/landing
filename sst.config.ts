@@ -16,7 +16,9 @@ export default $config({
           ? {
               name: "keizerworks.com",
               // redirects: ["www.keizerworks.com"],
-              dns: sst.cloudflare.dns(),
+              dns: sst.cloudflare.dns({
+                zone: process.env.CLOUDFLARE_ZONE_ID
+              }),
             }
           : undefined,
       environment: {
