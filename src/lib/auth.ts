@@ -1,11 +1,19 @@
-// Admin authentication with environment variables
-export const ADMIN_CREDENTIALS = {
-  email: process.env.ADMIN_EMAIL || 'edulume@keizerworks.com',
-  password: process.env.ADMIN_PASSWORD || 'weInvestInTheFuture@1'
-}
+export async function validateAdminCredentials(email: string, password: string): Promise<boolean> {
+  try {
+    const response = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    })
 
-export function validateAdminCredentials(email: string, password: string): boolean {
-  return email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password
+    const result = await response.json()
+    return result.success === true
+  } catch (error) {
+    console.error('Authentication error:', error)
+    return false
+  }
 }
 
 export function setAdminSession() {
@@ -30,11 +38,11 @@ export function isAdminAuthenticated(): boolean {
   
   if (!session || !timestamp) return false
   
-  // Session expires after 8 hours
+  // Session expires after 30 days
   const sessionAge = Date.now() - parseInt(timestamp)
-  const eightHours = 8 * 60 * 60 * 1000
+  const thirtyDays = 30 * 24 * 60 * 60 * 1000
   
-  if (sessionAge > eightHours) {
+  if (sessionAge > thirtyDays) {
     clearAdminSession()
     return false
   }
