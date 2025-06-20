@@ -37,6 +37,29 @@ export default function ApplicationDetailsModal({ application, isOpen, onClose }
     }
   }
 
+  const openEmailInBrowser = (type: 'gmail' | 'outlook') => {
+    const subject = encodeURIComponent("We regret to inform you that you were not selected for the K25 batch of Keizerworks")
+    const body = encodeURIComponent(`Dear ${application.name},
+
+We reviewed your application for the applied position, but considering it with the other applications we received, we had to opt for the best we got.
+
+For Keizer, we are looking for a specific number of dedicated individuals who are willing to put in high efforts and understand the concept of Keizer.
+People who can work together with the best team in India to make Keizer great. Unfortunately, you didn't meet our requirements, hence you didn't get selected.
+
+You can apply later for further opportunities at Keizerworks!
+Till then, see you.
+
+Best wishes,
+Yukti M.
+COO | Keizerworks.`)
+
+    const mailtoUrl = type === 'gmail' 
+      ? `https://mail.google.com/mail/?view=cm&fs=1&to=${application.email}&su=${subject}&body=${body}`
+      : `https://outlook.live.com/mail/0/deeplink/compose?to=${application.email}&subject=${subject}&body=${body}`
+
+    window.open(mailtoUrl, '_blank')
+  }
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'long',
@@ -201,18 +224,20 @@ export default function ApplicationDetailsModal({ application, isOpen, onClose }
           >
             Close
           </button>
-          <a
-            href={`mailto:${application.email}?subject=We regret to inform you that you were not selected for the K25 batch of Keizerworks&body=Dear ${application.name},%0A%0AWe reviewed your application for the applied position, but considering it with the other applications we received, we had to opt for the best we got.%0A%0AFor Keizer, we are looking for a specific number of dedicated individuals who are willing to put in high efforts and understand the concept of Keizer.%0APeople who can work together with the best team in India to make Keizer great. Unfortunately, you didn't meet our requirements, hence you didn't get selected.%0A%0AYou can apply later for further opportunities at Keizerworks!%0ATill then, see you.%0A%0ABest wishes,%0AYukti M.%0ACOO | Keizerworks.`}
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+          <button
+            onClick={() => openEmailInBrowser('gmail')}
+            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors flex items-center"
           >
-            Send Rejection
-          </a>
-          <a
-            href={`mailto:${application.email}?subject=Re: Your application for ${application.preferred_role}&body=Hi ${application.name},%0A%0A`}
-            className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md hover:bg-gray-800 transition-colors"
+            <Mail className="h-4 w-4 mr-2" />
+            Send with Gmail
+          </button>
+          <button
+            onClick={() => openEmailInBrowser('outlook')}
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors flex items-center"
           >
-            Reply to Application
-          </a>
+            <Mail className="h-4 w-4 mr-2" />
+            Send with Outlook
+          </button>
         </div>
       </div>
     </Modal>
