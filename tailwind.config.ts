@@ -148,6 +148,13 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        keizer: {
+          navy: "#020B2D",
+          deep: "#032F8C",
+          bright: "#0A5CFF",
+          textDark: "#111827",
+          muted: "#A1A1AA",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

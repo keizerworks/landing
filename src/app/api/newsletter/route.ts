@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
@@ -6,18 +5,12 @@ import { RateLimiterMemory } from "rate-limiter-flexible";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const ContactFormSchema = z.object({
-  name: z.string().trim().min(2, "Name must be at least 2 characters"),
+const NewsletterSchema = z.object({
   email: z.string().email("Invalid email address"),
-  company: z.string().trim().min(2, "Company name is required"),
-  project: z
-    .string()
-    .trim()
-    .min(50, "Project description must be at least 50 characters"),
 });
 
 const rateLimiter = new RateLimiterMemory({
-  points: 3,
+  points: 5, // Allow more requests for newsletter
   duration: 60,
 });
 
@@ -28,28 +21,28 @@ export async function POST(request: NextRequest) {
     );
 
     const body = await request.json();
-    const result = ContactFormSchema.safeParse(body);
+    const result = NewsletterSchema.safeParse(body);
 
     if (!result.success) {
-      const errorMessages = result.error.errors.map((error) => error.message);
-      return NextResponse.json({ errors: errorMessages }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid email address" },
+        { status: 400 },
+      );
     }
 
-    const { name, email, company, project } = result.data;
+    const { email } = result.data;
 
+    // Send notification email to admin
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "karan.kendre@keizerworks.com",
       to: process.env.RESEND_TO_EMAIL || "karankendreg@gmail.com",
-      replyTo: email,
-      subject: `New Project Inquiry from ${name}`,
+      subject: "New Newsletter Subscription",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>New Project Inquiry</h2>
-          <p><strong>Name:</strong> ${name}</p>
+          <h2>New Newsletter Subscription</h2>
+          <p>A new user has subscribed to your newsletter:</p>
           <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Company:</strong> ${company}</p>
-          <p><strong>Project Details:</strong></p>
-          <blockquote style="border-left: 3px solid #ccc; padding-left: 15px; margin: 15px 0;">${project}</blockquote>
+          <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
         </div>
       `,
     });
@@ -57,21 +50,21 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error("Resend error:", error);
       return NextResponse.json(
-        { error: "Failed to send email" },
+        { error: "Failed to subscribe. Please try again." },
         { status: 500 },
       );
     }
 
-    console.log("Email sent successfully:", data);
+    console.log("Newsletter subscription successful:", data);
 
     return NextResponse.json(
-      { message: "Project inquiry sent successfully", data },
+      { message: "Successfully subscribed to newsletter!" },
       { status: 200 },
     );
   } catch (error) {
     if (error instanceof Error && error.name === "RateLimiterError") {
       return NextResponse.json(
-        { error: "Too many submissions. Please try again later." },
+        { error: "Too many requests. Please try again later." },
         { status: 429 },
       );
     }
@@ -83,3 +76,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

@@ -2,9 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+*{
+  overscroll-behavior: none;
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-color: black;
+  background-color: white;
+  scroll-behavior: hidden;
 }
 
 span {

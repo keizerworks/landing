@@ -1,422 +1,186 @@
 "use client";
 
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useAnimation,
-  MotionValue,
-} from "motion/react";
-import { useEffect, useState } from "react";
-import CursorIcon from "../assets/cursor-icon";
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
 
-interface AnimatedTextProps {
-  text: string;
-  delay: number;
+interface NavLink {
+  label: string;
+  href: string;
 }
 
-interface FloatingLabelProps {
-  labelDelay: number;
-  cursorY: MotionValue<number>;
-}
-
-const AnimatedText = ({ text, delay = 0 }: AnimatedTextProps) => {
+const KeizerLogo = ({
+  color = "white",
+  className = "",
+}: {
+  color?: string;
+  className?: string;
+}) => {
   return (
-    <span className="inline-block tracking-tight">
-      {text.split("").map((char, index) => (
-        <motion.span
-          key={index}
-          className={`inline-block ${char === " " ? "w-[0.20em]" : ""}`}
-          initial={{
-            opacity: 0,
-            y: 50,
-            filter: "blur(10px)",
-          }}
-          animate={{
-            opacity: char === " " ? 0 : 1,
-            y: 0,
-            filter: "blur(0px)",
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 100,
-            damping: 12,
-            mass: 0.1,
-            delay: delay + index * 0.05,
-          }}
-        >
-          {char}
-        </motion.span>
-      ))}
-    </span>
+    <Image
+      src="/assets/logos/keizer-logo.svg"
+      alt="Keizer Logo"
+      width={120}
+      height={40}
+      className={className}
+      style={{ filter: color === "white" ? "brightness(0) invert(1)" : "none" }}
+    />
+  );
+};
+
+const KeizerIconLarge = ({ className = "" }: { className?: string }) => {
+  return (
+    <Image
+      src="/assets/logos/keizer-bg-blue.svg"
+      alt="Keizer Icon"
+      width={256}
+      height={256}
+      className={className}
+    />
   );
 };
 
 const HeroSection = () => {
-  const firstLineDelay = 0;
-  const secondLineDelay = 0.5;
-  const firstLoadDelay = 2.4;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  const navLinks: NavLink[] = [
+    { label: "Blogs", href: "/blog" },
+    { label: "Approach", href: "/approach" },
+    { label: "Collabration", href: "/collaboration" },
+    { label: "Contact us", href: "/contact" },
+  ];
 
-  const [allowUnderlineAnimation, setAllowUnderlineAnimation] =
-    useState<boolean>(false);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
-  // Calculate total animation time for text + a small buffer
-  const textAnimationDuration = 1.0; // Approximate time for text animation
-  const underlineDelay = firstLineDelay + textAnimationDuration;
-  const labelDelay = underlineDelay + 0.3;
-
-  const visionControls = useAnimation();
-  const missionControls = useAnimation();
-  const cursorPositionY = useMotionValue(60);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (allowUnderlineAnimation) {
-        visionControls.start({
-          width: "100%",
-          opacity: 1,
-          transition: { duration: 0.3 },
-        });
-      }
-    }, underlineDelay * 1000);
-
-    return () => clearTimeout(timeout);
-  }, [visionControls, underlineDelay, allowUnderlineAnimation]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setAllowUnderlineAnimation(true);
-    }, firstLoadDelay);
-
-    return () => clearTimeout(timeout);
-  }, []);
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
 
   return (
-    <section
-      id="hero"
-      className="md:max-h-[800px] md:h-screen overflow-hidden relative flex md:flex-row flex-col items-start md:max-w-[1536px] mx-auto md:pt-[200px] pt-[100px] pb-[100px] md:px-24 px-4  bg-black w-full"
-    >
-      <div className="font-gb relative text-white w-full">
-        <h1
-          className="flex flex-col gap-2 items-start lg:text-8xl md:text-6xl text-5xl  leading-[1.2] relative"
-          onMouseEnter={async () => {
-            if (!allowUnderlineAnimation) return;
-            cursorPositionY.set(180);
-            await visionControls.start({
-              width: 0,
-              transition: { duration: 0.15 },
-            });
-            await missionControls.start({
-              width: "100%",
-              opacity: 1,
-              transition: { duration: 0.15 },
-            });
-          }}
-          onMouseLeave={async () => {
-            if (!allowUnderlineAnimation) return;
-            cursorPositionY.set(60);
-            await missionControls.start({
-              width: 0,
-              transition: { duration: 0.15 },
-            });
-            await visionControls.start({
-              width: "100%",
-              opacity: 1,
-              transition: { duration: 0.15 },
-            });
-          }}
-        >
-          <span>
-            <AnimatedText text="Your" delay={firstLineDelay} />{" "}
-            <span className="inline-block relative">
-              <AnimatedText text="Vision" delay={firstLineDelay + 0.2} />
-              <motion.span
-                className="absolute translate-y-1 inline-block left-0 bottom-0 bg-[#ff66ff] h-2"
-                initial={{ width: 0, opacity: 0 }}
-                animate={visionControls}
-                transition={{
-                  duration: 0.3,
-                  ease: "easeOut",
-                }}
-              />
-              <FloatingLabelNormal />
-            </span>
-          </span>
-          <span>
-            <AnimatedText text="Our " delay={secondLineDelay} />
-            <span className="inline-block relative">
-              <AnimatedText text="Mission" delay={secondLineDelay + 0.2} />
-              <motion.span
-                className="absolute translate-y-1 inline-block left-0 bottom-0 bg-[#ff66ff] h-2"
-                initial={{ width: 0, opacity: 0 }}
-                animate={missionControls}
-                transition={{
-                  duration: 0.15,
-                  ease: "easeOut",
-                }}
-              />
-            </span>
-          </span>
+    <section className="relative w-full min-h-[60vh] md:min-h-[60vh] flex flex-col justify-between overflow-hidden">
+    
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background: `linear-gradient(180deg, #010518 0%, #0060FF 76.2%, #FFFFFF 121.2%)`,
+        }}
+      /> 
 
-          <FloatingLabel labelDelay={labelDelay} cursorY={cursorPositionY} />
-        </h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 50 }}
-          animate={{
-            opacity: 1,
-            y: 0,
+    
+      <div className="absolute right-0 top-0 h-full w-1/3 z-10 pointer-events-none hidden md:block">
+      
+        <div
+          className="absolute right-[96px] top-0 h-1/2 w-[48px]"
+          style={{
+            background: "linear-gradient(180deg, rgba(1, 95, 255, 0.37) 0%, #051430 39.98%)",
           }}
-          transition={{
-            delay: 2,
-            type: "spring",
-            stiffness: 100,
-            damping: 12,
-            mass: 0.1,
+        />
+      
+        <div
+          className="absolute right-[146px] bottom-0 h-1/2 w-[48px]"
+          style={{
+            background: "linear-gradient(180deg, rgba(255, 255, 255, 0.87) 0%,rgba(255, 255, 255, 0.87) 50%, rgba(1, 95, 255, 0.68) 100%)",
           }}
-          className="font-sg font-medium md:text-lg text-sm mt-8"
-        >
-          We are the trusted partner for startups and businesses, offering{" "}
-          <br className="md:inline-block hidden" />
-          innovative solutions that turn your ideas into impactful realities
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{
-            opacity: 1,
-            y: 0,
+        />
+      
+        <div
+          className="absolute right-0 top-0 h-1/2 w-[48px]"
+          style={{
+            background: "linear-gradient(180deg, rgba(1, 95, 255, 0.37) 0%, #051430 39.98%)",
           }}
-          transition={{
-            delay: 1.8,
-            type: "spring",
-            stiffness: 100,
-            damping: 12,
-            mass: 0.1,
+        />
+      
+        <div
+          className="absolute right-[48px] bottom-0 h-1/2 w-[48px]"
+          style={{
+            background: "linear-gradient(180deg, rgba(255, 255, 255, 0.87) 0%,rgba(255, 255, 255, 0.87) 50%, rgba(1, 95, 255, 0.68) 100%)",
           }}
-          className="absolute h-[283px] w-[565px] top-12 pointer-events-none left-8"
-        >
-          <img
-            src="/assets/decoration/decoration.svg"
-            alt=""
-            className="h-full w-full md:scale-100 scale-75"
-          />
-        </motion.div>
-
-        <motion.button
-          initial={{ opacity: 0, y: 50 }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            delay: 2.1,
-            type: "spring",
-            stiffness: 100,
-            damping: 12,
-            mass: 0.1,
-          }}
-          className="font-sg translate-x-1 font-medium mt-8 group relative text-white px-4 md:text-lg py-2"
-        >
-          <div className="absolute -bottom-1 -left-1 w-full h-full bg-white z-0"></div>
-          <div className="absolute group-active:translate-y-1 group-active:-translate-x-1 transition-all inset-0 bg-[#2d2dc3] z-10"></div>
-          <a
-            href="#contact"
-            className="relative inline-block transition-all  duration-300 z-20 group-active:-translate-x-1 group-active:translate-y-1"
-          >
-            Request a Demo
-          </a>
-        </motion.button>
+        />
       </div>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          delay: 2.1,
-          type: "spring",
-          stiffness: 100,
-          damping: 12,
-          mass: 0.1,
-        }}
-        className="absolute bottom-20 -right-10 pointer-events-none"
-      >
-        <img
-          src="/assets/decoration/decoration-text.svg"
-          alt=""
-          className="h-full w-full"
-        />
-      </motion.div>
-      <div className="relative md:ml-0 md:mx-0 mx-auto mt-[50px] flex-shrink-0 md:w-[412px] w-[380px] aspect-square">
-        <motion.img
-          initial={{ opacity: 0, y: 14, x: -14 }}
-          animate={{
-            opacity: 1,
-            y: 0,
-            x: 0,
-          }}
-          transition={{
-            delay: 1.9,
-            type: "spring",
-            stiffness: 100,
-            damping: 12,
-            mass: 0.1,
-          }}
-          src={"/assets/logos/keizer-bg-blue.svg"}
-          className="z-30 absolute inset-0 object-cover"
-          alt="keizer-logo"
-        />
-        <motion.div
-          initial={{ opacity: 0, y: 24, x: -24 }}
-          animate={{
-            opacity: 1,
-            y: 7,
-            x: -15,
-          }}
-          transition={{
-            delay: 2.0,
-            type: "spring",
-            stiffness: 100,
-            damping: 12,
-            mass: 0.1,
-          }}
-          className="inset-0 absolute z-10 -translate-x-3 translate-y-3 bg-white"
-        />
-        <motion.div
-          initial={{ opacity: 0, y: 54, x: -54 }}
-          animate={{
-            opacity: 1,
-            y: 20,
-            x: -28,
-          }}
-          transition={{
-            delay: 2.1,
-            type: "spring",
-            stiffness: 100,
-            damping: 12,
-            mass: 0.1,
-          }}
-          className="inset-0 absolute z-0  -translate-x-6 translate-y-6 bg-[#1e96fc]"
-        />
+
+    
+      <nav className="absolute top-4 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center justify-center space-x-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="text-white text-[16px] font-medium tracking-[6%] hover:text-white/80 hover:opacity-100 transition-opacity"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+      
+      <div className="relative top-4 md:top-16 z-50 w-full px-6 md:px-16 py-4 md:py-8 flex items-center justify-between">
+        <Link href="/" className="flex-shrink-0 cursor-pointer">
+          <Image src="/assets/logos/klogo.svg" alt="Keizer Logo" width={105} height={43} className="w-[80px] h-auto md:w-[105px]" />
+        </Link>
+
+        {/* Mobile Menu Button & Dropdown */}
+        <div className="md:hidden relative">
+          <button
+            onClick={toggleMobileMenu}
+            className="relative z-[65] text-white cursor-pointer p-2 hover:opacity-80 transition-all duration-300 transform active:scale-95"
+            aria-label="Toggle mobile menu"
+          >
+            <div className="relative w-6 h-6">
+              <div className={`absolute inset-0 transition-all duration-300 transform ${isMobileMenuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'}`}>
+                <Menu size={24} />
+              </div>
+              <div className={`absolute inset-0 transition-all duration-300 transform ${isMobileMenuOpen ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'}`}>
+                <X size={24} />
+              </div>
+            </div>
+          </button>
+
+          {/* Dropdown Menu */}
+          {isMobileMenuOpen && (
+            <>
+              {/* Backdrop */}
+              <div
+                className="fixed inset-0 z-[55] bg-black/10 backdrop-blur-[2px] animate-in fade-in duration-300"
+                onClick={closeMobileMenu}
+              />
+              
+              {/* Dropdown Panel */}
+              <div className="absolute right-0 top-full mt-2 z-[60] min-w-[220px] bg-[#051430]/90 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300 origin-top-right">
+                <nav className="py-2">
+                  {navLinks.map((link, index) => (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      onClick={closeMobileMenu}
+                      className="group flex items-center px-5 py-3.5 text-white/90 text-[15px] font-medium tracking-wide transition-all duration-200 hover:bg-white/10 hover:text-white"
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
+                      <span className="transform transition-transform duration-200 group-hover:translate-x-1">
+                        {link.label}
+                      </span>
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+    
+      <div className="relative z-40 w-full px-6 md:px-20 pb-8 md:pb-12 flex-grow flex items-end">
+        <div className="max-w-4xl">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[36px] font-regular text-white tracking-tight leading-tight">
+            We Partner with Startups to <br className="hidden sm:block" />
+            <span className="opacity-95">Scale, Build & Raise faster</span>
+          </h1>
+        </div>
       </div>
     </section>
   );
 };
 
-const FloatingLabel: React.FC<FloatingLabelProps> = ({
-  labelDelay = 0,
-  cursorY,
-}) => {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const x = useSpring(mouseX, { damping: 25, stiffness: 150 });
-  const y = useSpring(cursorY, { damping: 25, stiffness: 150 });
-
-  const [randomStart, setRandomStart] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    setRandomStart({
-      x: Math.random() * window.innerWidth - 250,
-      y: Math.random() * window.innerHeight - 100,
-    });
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      const deltaX = (e.clientX - window.innerWidth / 2) * 0.02;
-      mouseX.set(500 + deltaX);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX]);
-
-  const floatingAnimation = {
-    y: [0, -6, 0],
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  };
-
-  return (
-    <motion.div
-      initial={{
-        x: randomStart.x,
-        y: randomStart.y,
-        opacity: 0,
-      }}
-      animate={{
-        opacity: [0, 1, 1],
-        x: [randomStart.x, randomStart.x, 500],
-        y: [randomStart.y, randomStart.y, 60],
-      }}
-      transition={{
-        duration: 0.5,
-        delay: labelDelay,
-        times: [0, 0.2, 1],
-        ease: ["easeOut", "easeOut", "easeInOut"],
-      }}
-      style={{ x, y }}
-      className="absolute hidden md:inline-block"
-    >
-      <motion.span
-        animate={floatingAnimation}
-        className="text-sm inline-block px-4 py-0.5 bg-[#ff66ff] text-[#383A48] border-2 border-[#383A48]"
-      >
-        <span>
-          <span className="inline-block relative h-full w-full">
-            Keizer
-            <span className="absolute -top-6 -left-10">
-              <CursorIcon />
-            </span>
-          </span>
-        </span>
-      </motion.span>
-    </motion.div>
-  );
-};
-
-const FloatingLabelNormal = () => {
-  const floatingAnimation = {
-    y: [0, -6, 0],
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  };
-
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-      }}
-      transition={{
-        delay: 2,
-        duration: 0.5,
-        ease: "easeOut",
-      }}
-      className="absolute md:hidden inline-block translate-x-[20%] top-[90%]"
-    >
-      <motion.span
-        animate={floatingAnimation}
-        className="text-sm inline-block px-4 py-0.5 bg-[#ff66ff] text-[#383A48] border-2 border-[#383A48]"
-      >
-        <span>
-          <span className="inline-block relative h-full w-full">
-            Keizer
-            <span className="absolute -top-6 -left-10">
-              <CursorIcon />
-            </span>
-          </span>
-        </span>
-      </motion.span>
-    </motion.div>
-  );
-};
-
 export default HeroSection;
+export { KeizerLogo, KeizerIconLarge };
