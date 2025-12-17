@@ -3,7 +3,6 @@ RESEND_API_KEY=<your resend api key>
 RESEND_FROM_EMAIL=karan.kendre@keizerworks.com
 RESEND_TO_EMAIL=karankendreg@gmail.com
 
-# Legacy Gmail Configuration (no longer used)
-# EMAIL=<your email>
-# EMAIL_APP_PASSWORD=<for this click the link below>
-# https://security.google.com/settings/security/apppasswords
+# Lingo.dev Configuration
+NEXT_PUBLIC_LINGODOTDEV_API_KEY=<your lingo.dev api key>
+

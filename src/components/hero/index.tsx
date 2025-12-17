@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { useTranslation } from "~/hooks/useTranslation";
 
 interface NavLink {
   label: string;
@@ -44,11 +45,18 @@ const KeizerIconLarge = ({ className = "" }: { className?: string }) => {
 const HeroSection = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
+  const blogsLabel = useTranslation("Blogs");
+  const approachLabel = useTranslation("Approach");
+  const collaborationLabel = useTranslation("Collabration");
+  const contactUsLabel = useTranslation("Contact us");
+  const heroTitlePart1 = useTranslation("We Partner with Startups to");
+  const heroTitlePart2 = useTranslation("Scale, Build & Raise faster");
+  
   const navLinks: NavLink[] = [
-    { label: "Blogs", href: "/blog" },
-    { label: "Approach", href: "/approach" },
-    { label: "Collabration", href: "/collaboration" },
-    { label: "Contact us", href: "/contact" },
+    { label: blogsLabel, href: "/blog" },
+    { label: approachLabel, href: "/approach" },
+    { label: collaborationLabel, href: "/collaboration" },
+    { label: contactUsLabel, href: "/contact" },
   ];
 
   const toggleMobileMenu = () => {
@@ -172,9 +180,9 @@ const HeroSection = () => {
     
       <div className="relative z-40 w-full px-6 md:px-20 pb-8 md:pb-12 flex-grow flex items-end">
         <div className="max-w-4xl">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[36px] font-regular text-white tracking-tight leading-tight">
-            We Partner with Startups to <br className="hidden sm:block" />
-            <span className="opacity-95">Scale, Build & Raise faster</span>
+          <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[36px] font-regular text-white tracking-tight leading-tight">
+            {heroTitlePart1} <br className="hidden sm:block" />
+            <span className="opacity-95">{heroTitlePart2}</span>
           </h1>
         </div>
       </div>

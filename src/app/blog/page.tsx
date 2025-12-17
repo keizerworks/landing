@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, Suspense } from "react";
-import { Globe, ChevronLeft } from "lucide-react";
+import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import SearchBar from "~/components/shared/SearchBar";
+import { useTranslation } from "~/hooks/useTranslation";
+import { useTranslationObject } from "~/hooks/useTranslation";
+import { PageNavbar } from "~/components/ui/page-navbar";
+import { PageFooter } from "~/components/ui/page-footer";
 
 const blogPosts = [
   {
@@ -45,7 +47,7 @@ const Badge = ({
   </span>
 );
 
-const BlogPostCard = ({ post }: { post: (typeof blogPosts)[0] }) => {
+const BlogPostCard = ({ post }: { post: typeof blogPosts[0] }) => {
   return (
     <Link href={`/blog/${post.id}`}>
       <motion.div
@@ -56,7 +58,7 @@ const BlogPostCard = ({ post }: { post: (typeof blogPosts)[0] }) => {
         className="group flex flex-col md:flex-row gap-8 items-center  py-8 border-b border-transparent hover:bg-gray-50/50 transition-colors rounded-xl p-4 cursor-pointer"
       >
         
-        <div className="w-full md:w-[320px] h-[200px] flex-shrink-0 overflow-hidden rounded-xl bg-gray-100">
+        <div className="w-full md:w-[320px] h-[200px] flex-shrink-0 overflow-hidden rounded-xl bg-gray-100 transition-all duration-500 group-hover:w-[330px]  origin-left">
           <Image
             src={post.image}
             alt={post.title}
@@ -89,6 +91,13 @@ function BlogListingContent() {
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
 
+  const blogLabel = useTranslation("Blog");
+  const searchBlogsPlaceholder = useTranslation("Search blogs");
+  const recentPostsLabel = useTranslation("Recent Posts");
+
+  const translatedBlogPosts = useTranslationObject(blogPosts);
+  const translatedCategories = useTranslationObject(categories);
+
   
   useEffect(() => {
     const search = searchParams.get("search");
@@ -97,69 +106,44 @@ function BlogListingContent() {
     }
   }, [searchParams]);
 
-  
-  const filteredPosts = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return blogPosts;
-    }
-    const lowerQuery = searchQuery.toLowerCase();
-    return blogPosts.filter(
-      (post) =>
-        post.title.toLowerCase().includes(lowerQuery) ||
-        post.description.toLowerCase().includes(lowerQuery) ||
-        post.category.toLowerCase().includes(lowerQuery)
-    );
-  }, [searchQuery]);
-
   return (
     <div className="min-h-screen bg-white font-sans text-[#111111]">
       
-      <header className="border-b border-gray-100 sticky top-0 bg-white/90 backdrop-blur-sm z-50">
-        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-          
-          <Link href="/" className="flex items-center gap-2 cursor-pointer">
-            <Image src="/assets/logos/klogo1.svg" alt="Keizer Logo" width={44} height={44} className="w-[44px] h-[44px]" />
-            <span className="font-semibold text-[16px]">Blog</span>
-          </Link>
-
-          
-          <SearchBar placeholder="Search blogs" onSearch={setSearchQuery} initialValue={searchQuery} />
-
-          
-          <button className="" aria-label="Globe">
-            <Image src="/assets/decoration/globe.svg" alt="Globe" width={44} height={44} className="w-[44px] h-[44px]" />
-          </button>
-        </div>
-      </header>
+      <PageNavbar
+        logoLabel={blogLabel}
+        searchPlaceholder={searchBlogsPlaceholder}
+        onSearch={setSearchQuery}
+        initialSearchValue={searchQuery}
+      />
 
       <main className="max-w-6xl mx-auto px-6 py-12">
         
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6">
           <h1 className="text-2xl font-semibold tracking-tight">
-            {searchQuery ? `Search Results (${filteredPosts.length})` : "Recent Posts"}
+            {recentPostsLabel}
           </h1>
 
           <div className="flex flex-wrap gap-1">
-            {categories.map((cat, index) => {
+            {translatedCategories.map((cat, index) => {
               const isFirst = index === 0;
               const isLast = index === categories.length - 1;
               const isActive = activeCategory === cat;
               
-              let borderRadius = "rounded-xl"; 
+              let borderRadius = "rounded-[5px]"; 
 
               if (isActive) {
                 borderRadius = "rounded-full";
               } else if (isFirst) {
-                borderRadius = "rounded-l-full rounded-r-xl";
+                borderRadius = "rounded-l-full rounded-r-[5px]";
               } else if (isLast) {
-                borderRadius = "rounded-r-full rounded-l-xl";
+                borderRadius = "rounded-r-full rounded-l-[5px]";
               }
 
               return (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-1.5 ${borderRadius} text-sm font-medium transition-all duration-200 ${
+                  className={`px-4 py-1.5 ${borderRadius} hover:rounded-full text-sm font-medium transition-all duration-200 ${
                     isActive
                       ? "bg-[#111111] text-white"
                       : "bg-[#F3F4F6] text-[#6B7280]"
@@ -174,31 +158,12 @@ function BlogListingContent() {
 
         
         <div className="flex flex-col gap-8 mb-16">
-          {filteredPosts.length > 0 ? (
-            filteredPosts.map((post) => (
-              <BlogPostCard key={post.id} post={post} />
-            ))
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-[#6B7280] text-lg">No blog posts found matching your search.</p>
-            </div>
-          )}
+          {translatedBlogPosts.map((post) => (
+            <BlogPostCard key={post.id} post={post} />
+          ))}
         </div>
 
-        <div className="mt-20 p-4 rounded-[13px] max-w-[362px] bg-[#FCFBFB] hover:bg-[#F4F4F4] transition-all duration-300">
-          <Link
-            href="/"
-            className="inline-flex flex-col gap-1 group"
-          >
-            <button className="flex items-center gap-1 text-[16px] font-regular text-sm text-[#979797] hover:text-[#111111] transition-colors group">
-              <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              Previous
-            </button>
-            <div className=" text-[16px] font-regular">
-              Home Page
-            </div>
-          </Link>
-        </div>
+        <PageFooter />
       </main>
     </div>
   );
@@ -208,20 +173,7 @@ function BlogListingContent() {
 function BlogListingFallback() {
   return (
     <div className="min-h-screen bg-white font-sans text-[#111111]">
-      <header className="border-b border-gray-100 sticky top-0 bg-white/90 backdrop-blur-sm z-50">
-        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 cursor-pointer">
-            <Image src="/assets/logos/klogo1.svg" alt="Keizer Logo" width={44} height={44} className="w-[44px] h-[44px]" />
-            <span className="font-semibold text-[16px]">Blog</span>
-          </Link>
-          <div className="flex-1 max-w-md mx-4">
-            <div className="h-10 bg-gray-100 rounded-md animate-pulse" />
-          </div>
-          <button className="" aria-label="Globe">
-            <Image src="/assets/decoration/globe.svg" alt="Globe" width={44} height={44} className="w-[44px] h-[44px]" />
-          </button>
-        </div>
-      </header>
+      <PageNavbar logoLabel="Blog" />
       <main className="max-w-6xl mx-auto px-6 py-12">
         <div className="animate-pulse space-y-8">
           <div className="h-8 bg-gray-100 rounded w-1/3" />

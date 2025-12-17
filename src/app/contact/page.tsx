@@ -1,23 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Building2, FileText, Loader2, ArrowUpRight, ChevronLeft, CheckCircle2, XCircle } from "lucide-react";
+import { Mail, Building2, FileText, Loader2, ArrowUpRight, CheckCircle2, XCircle } from "lucide-react";
 import { z } from "zod";
-import Image from "next/image";
 import Link from "next/link";
-import SearchBar from "~/components/shared/SearchBar";
 import { gotham_font, spaceGrotesk } from "~/config/font";
+import { useTranslation } from "~/hooks/useTranslation";
+import { PageNavbar } from "~/components/ui/page-navbar";
+import { PageFooter } from "~/components/ui/page-footer";
 
-const formSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  company: z.string().min(3, "Company is required"),
-  project: z
-    .string()
-    .min(40, "Please provide project description above 40 characters"),
-});
-
-type FormData = z.infer<typeof formSchema>;
+type FormData = {
+  name: string;
+  email: string;
+  company: string;
+  project: string;
+};
 
 export default function ContactPage() {
   const [formData, setFormData] = useState<FormData>({
@@ -32,6 +29,42 @@ export default function ContactPage() {
     message: string;
     type: "success" | "error";
   } | null>(null);
+
+  // Translations
+  const searchBlogsPlaceholder = useTranslation("Search blogs");
+  const visionTitle1 = useTranslation("Have a Vision?");
+  const visionTitle2 = useTranslation("Time to make it a reality");
+  const description1 = useTranslation(
+    "Keizerworks is a frontier firm for visionaries. Work with us if you want to build a startup that scales with structural integrity, rather than one that accumulates technical and operational debt from the start."
+  );
+  const description2 = useTranslation(
+    "If you want clarity, structure, and a trusted partner who understands the exact order things need to happen, fill out the form below and let's talk."
+  );
+  const aboutYouLabel = useTranslation("About You");
+  const nameLabel = useTranslation("Name");
+  const namePlaceholder = useTranslation("Enter your name");
+  const nameRequiredLabel = useTranslation("Name is required");
+  const emailLabel = useTranslation("Email");
+  const emailPlaceholder = useTranslation("yourname@gmail.com");
+  const invalidEmailLabel = useTranslation("Invalid email address");
+  const companyLabel = useTranslation("Company");
+  const companyPlaceholder = useTranslation("Enter your company name");
+  const companyRequiredLabel = useTranslation("Company is required");
+  const projectDetailsLabel = useTranslation("Project Details");
+  const projectDescriptionLabel = useTranslation("Project Description");
+  const projectPlaceholder = useTranslation("Tell us about your project, goals, and what you're looking to build...");
+  const projectMinCharsLabel = useTranslation("Please provide at least 40 characters describing your project.");
+  const projectDescriptionErrorLabel = useTranslation("Please provide project description above 40 characters");
+  const submitApplicationLabel = useTranslation("Submit Application");
+  const sendingLabel = useTranslation("Sending");
+  const sentLabel = useTranslation("Sent");
+  const errorLabel = useTranslation("Error");
+  const termsText = useTranslation(
+    "By clicking submit, you agree to our terms of service and privacy policy. We'll review your inquiry and get back to you within 24-48 hours."
+  );
+  const messageSentLabel = useTranslation("Message sent successfully!");
+  const failedToSendLabel = useTranslation("Failed to send message");
+  const unableToSendLabel = useTranslation("Unable to send message. Please try again.");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -49,22 +82,31 @@ export default function ContactPage() {
   };
 
   const validateForm = (): boolean => {
-    try {
-      formSchema.parse(formData);
-      setErrors({});
-      return true;
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const newErrors: { [key: string]: string } = {};
-        error.errors.forEach((err) => {
-          if (err.path) {
-            newErrors[err.path[0]] = err.message;
-          }
-        });
-        setErrors(newErrors);
-      }
+    const newErrors: { [key: string]: string } = {};
+    
+    if (!formData.name || formData.name.length < 2) {
+      newErrors.name = nameRequiredLabel;
+    }
+    
+    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = invalidEmailLabel;
+    }
+    
+    if (!formData.company || formData.company.length < 3) {
+      newErrors.company = companyRequiredLabel;
+    }
+    
+    if (!formData.project || formData.project.length < 40) {
+      newErrors.project = projectDescriptionErrorLabel;
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return false;
     }
+    
+    setErrors({});
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -93,18 +135,18 @@ export default function ContactPage() {
             project: "",
           });
           setSubmitStatus({
-            message: result.message || "Message sent successfully!",
+            message: result.message || messageSentLabel,
             type: "success",
           });
         } else {
           setSubmitStatus({
-            message: result.error || "Failed to send message",
+            message: result.error || failedToSendLabel,
             type: "error",
           });
         }
       } catch (_error) {
         setSubmitStatus({
-          message: "Unable to send message. Please try again.",
+          message: unableToSendLabel,
           type: "error",
         });
       } finally {
@@ -118,31 +160,7 @@ export default function ContactPage() {
   return (
     <div className={`min-h-screen bg-white font-sans text-[#111111] ${gotham_font.variable} ${spaceGrotesk.variable}`}>
       {/* --- NAVBAR --- */}
-      <header className="border-b border-gray-100 sticky top-0 bg-white/90 backdrop-blur-sm z-50">
-        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 cursor-pointer">
-            <Image
-              src="/assets/logos/klogo1.svg"
-              alt="Keizer Logo"
-              width={44}
-              height={44}
-              className="w-[44px] h-[44px]"
-            />
-          </Link>
-
-          <SearchBar placeholder="Search blogs" />
-
-          <button className="" aria-label="Globe">
-            <Image
-              src="/assets/decoration/globe.svg"
-              alt="Globe"
-              width={44}
-              height={44}
-              className="w-[44px] h-[44px]"
-            />
-          </button>
-        </div>
-      </header>
+      <PageNavbar searchPlaceholder={searchBlogsPlaceholder} />
 
       {/* --- MAIN CONTENT --- */}
       <main className="max-w-6xl mx-auto px-6 py-12">
@@ -151,19 +169,13 @@ export default function ContactPage() {
           <header className="space-y-6">
             <div>
               <h1 className="font-gb text-4xl md:text-5xl leading-[1.1] mb-4 font-semibold text-[#111111]">
-                Have a Vision?
+                {visionTitle1}
                 <br />
-                Time to make it a reality
+                {visionTitle2}
               </h1>
               <div className="space-y-3 text-[#6B7280] text-sm leading-relaxed max-w-2xl">
-                <p>
-                  Get your MVP to market—fast. We help startups build, scale, and
-                  launch with the right strategy, resources, and execution.
-                </p>
-                <p>
-                  Fill out the form below and let's start building something
-                  amazing together.
-                </p>
+                <p>{description1}</p>
+                <p>{description2}</p>
               </div>
             </div>
           </header>
@@ -172,7 +184,7 @@ export default function ContactPage() {
             {/* About You Section */}
             <section className="space-y-6">
               <h2 className="font-gb text-lg md:text-xl font-bold border-b border-gray-100 pb-2">
-                About You
+                {aboutYouLabel}
               </h2>
 
               <div className="grid grid-cols-1 gap-6">
@@ -181,7 +193,7 @@ export default function ContactPage() {
                     htmlFor="name"
                     className="text-sm font-medium leading-none text-[#111111]"
                   >
-                    Name <span className="text-red-500">*</span>
+                    {nameLabel} <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="name"
@@ -189,7 +201,7 @@ export default function ContactPage() {
                     type="text"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Enter your name"
+                    placeholder={namePlaceholder}
                     disabled={sendingEmail}
                     className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   />
@@ -206,7 +218,7 @@ export default function ContactPage() {
                     htmlFor="email"
                     className="text-sm font-medium leading-none text-[#111111]"
                   >
-                    Email <span className="text-red-500">*</span>
+                    {emailLabel} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -216,7 +228,7 @@ export default function ContactPage() {
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="yourname@gmail.com"
+                      placeholder={emailPlaceholder}
                       disabled={sendingEmail}
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 pl-9 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
@@ -234,7 +246,7 @@ export default function ContactPage() {
                     htmlFor="company"
                     className="text-sm font-medium leading-none text-[#111111]"
                   >
-                    Company <span className="text-red-500">*</span>
+                    {companyLabel} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -244,7 +256,7 @@ export default function ContactPage() {
                       type="text"
                       value={formData.company}
                       onChange={handleChange}
-                      placeholder="Enter your company name"
+                      placeholder={companyPlaceholder}
                       disabled={sendingEmail}
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 pl-9 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
@@ -262,7 +274,7 @@ export default function ContactPage() {
             {/* Project Details Section */}
             <section className="space-y-6">
               <h2 className="font-gb text-lg md:text-xl font-bold border-b border-gray-100 pb-2">
-                Project Details
+                {projectDetailsLabel}
               </h2>
 
               <div className="space-y-2">
@@ -270,7 +282,7 @@ export default function ContactPage() {
                   htmlFor="project"
                   className="text-sm font-medium leading-none text-[#111111]"
                 >
-                  Project Description <span className="text-red-500">*</span>
+                  {projectDescriptionLabel} <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <FileText className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -279,14 +291,14 @@ export default function ContactPage() {
                     name="project"
                     value={formData.project}
                     onChange={handleChange}
-                    placeholder="Tell us about your project, goals, and what you're looking to build..."
+                    placeholder={projectPlaceholder}
                     rows={6}
                     disabled={sendingEmail}
                     className="flex min-h-[120px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 pl-9 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                   />
                 </div>
                 <p className="text-xs text-gray-500">
-                  Please provide at least 40 characters describing your project.
+                  {projectMinCharsLabel}
                 </p>
                 {errors.project && (
                   <p className="text-red-500 text-xs flex items-center gap-2 pt-1">
@@ -312,51 +324,34 @@ export default function ContactPage() {
               >
                 {sendingEmail ? (
                   <>
-                    Sending
+                    {sendingLabel}
                     <Loader2 size={18} className="animate-spin" />
                   </>
                 ) : submitStatus?.type === "success" ? (
                   <>
-                    Sent
+                    {sentLabel}
                     <CheckCircle2 size={18} />
                   </>
                 ) : submitStatus?.type === "error" ? (
                   <>
-                    Error
+                    {errorLabel}
                     <XCircle size={18} />
                   </>
                 ) : (
                   <>
-                    Submit Application
+                    {submitApplicationLabel}
                     <ArrowUpRight size={18} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-300" />
                   </>
                 )}
               </button>
               <p className="text-xs text-gray-400 mt-4">
-                By clicking submit, you agree to our terms of service and privacy
-                policy. We'll review your inquiry and get back to you within 24-48
-                hours.
+                {termsText}
               </p>
             </div>
           </form>
 
           {/* --- FOOTER SECTION --- */}
-          <div className="mt-20">
-            <div className="p-4 rounded-[13px] max-w-[362px] bg-[#FCFBFB] hover:bg-[#F4F4F4] transition-all duration-300">
-              <Link
-                href="/"
-                className="inline-flex flex-col gap-1 group"
-              >
-                <button className="flex items-center gap-1 text-[16px] font-regular text-sm text-[#979797] hover:text-[#111111] transition-colors group">
-                  <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                  Previous
-                </button>
-                <div className="text-[16px] font-regular">
-                  Home Page
-                </div>
-              </Link>
-            </div>
-          </div>
+          <PageFooter />
         </div>
       </main>
     </div>

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { useTranslation } from "~/hooks/useTranslation";
+import { LanguageSelector } from "../ui/language-selector";
 
 const FooterSection = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +15,15 @@ const FooterSection = () => {
     message: string;
     type: "success" | "error" | null;
   } | null>(null);
+
+  const newsletterTitle = useTranslation("Join our newsletter");
+  const emailPlaceholder = useTranslation("Enter your email");
+  const subscribeLabel = useTranslation("Subscribe");
+  const subscribingLabel = useTranslation("Subscribing...");
+  const sentLabel = useTranslation("Sent");
+  const errorLabel = useTranslation("Error");
+  const privacyPolicyLabel = useTranslation("Privacy Policy");
+  const termsLabel = useTranslation("Terms & Conditions");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,14 +91,14 @@ const FooterSection = () => {
 
           
           <div className="w-full lg:w-auto">
-            <h3 className="text-2xl sm:text-3xl md:text-[36px] font-regular my-4 md:my-6">Join our newsletter</h3>
+            <h3 className="text-2xl sm:text-3xl md:text-[36px] font-regular my-4 md:my-6">{newsletterTitle}</h3>
             <form onSubmit={handleSubmit} className="flex flex-col gap-2">
               <div className="flex relative flex-col sm:flex-row gap-2 sm:gap-0">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder={emailPlaceholder}
                   disabled={isSubmitting}
                   className="flex-1 w-full sm:min-w-[300px] md:min-w-[420px] px-4 py-3 rounded-[12px] border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-500 placeholder:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
                   required
@@ -106,37 +117,37 @@ const FooterSection = () => {
                   {isSubmitting ? (
                     <>
                       <Loader2 size={16} className="animate-spin" />
-                      Subscribing...
+                      {subscribingLabel}
                     </>
                   ) : status?.type === "success" ? (
                     <>
                       <CheckCircle2 size={16} />
-                      Sent
+                      {sentLabel}
                     </>
                   ) : status?.type === "error" ? (
                     <>
                       <XCircle size={16} />
-                      Error
+                      {errorLabel}
                     </>
                   ) : (
-                    "Subscribe"
+                    subscribeLabel
                   )}
                 </Button>
               </div>
             </form>
           </div>
         </div>
- 
+
         
         <div className="flex flex-col md:flex-row justify-between items-center pt-6 md:pt-8 md:items-end gap-4 md:gap-0">
           <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6 text-xs sm:text-sm font-medium text-gray-600">
             <span>© Keizerworks {new Date().getFullYear()}</span>
             <div className="flex gap-4 md:gap-6">
               <Link href="/privacy-policy" className="hover:text-black transition-colors">
-                Privacy Policy
+                {privacyPolicyLabel}
               </Link>
-              <Link href="#" className="hover:text-black transition-colors">
-                Terms & Conditions
+              <Link href="/terms" className="hover:text-black transition-colors">
+                {termsLabel}
               </Link>
             </div>
           </div>
@@ -154,6 +165,9 @@ const FooterSection = () => {
              <Link href="https://pinterest.com" target="_blank" rel="noopener noreferrer" className="">
                 <Image src="/assets/socials/pin.svg" alt="Pinterest" width={20} height={20} />
             </Link>
+            <div className="flex items-center  p-0 -mx-4 -my-4">
+            <LanguageSelector openUpwards  />
+          </div>
           </div>
         </div>
       </div>
