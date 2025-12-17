@@ -1,47 +1,54 @@
+"use client";
+
 import Image from "next/image";
 import RoadmapElement from "../ui/roadmap";
 import data from "./data.json";
+import { useTranslation } from "~/hooks/useTranslation";
+import { useTranslationObject } from "~/hooks/useTranslation";
 
 const ClientSection = () => {
+  const dddmLabel = useTranslation("The DDDM");
+  const designLabel = useTranslation("We Design,");
+  const developLabel = useTranslation("Develop, Deliver");
+  const maintainLabel = useTranslation("and Maintain");
+  const descriptionText = useTranslation(
+    "From concept to launch, we provide reliable full-stack development services. Our team specializes in designing, building, and maintaining high-quality MVPs and scalable applications, bringing your vision to life"
+  );
+  const roadmapLabel = useTranslation("The Roadmap");
+  
+  const translatedData = useTranslationObject(data);
+
   return (
     <section id="client" className="bg-primary space-y-[60px] md:py-[100px] py-[60px] ">
       <div className="md:px-[100px] px-[24px] md:py-[60px] mx-auto max-w-[1536px] tracking-[-1%] flex md:flex-row flex-col justify-between md:items-center">
         <div>
-          <p className="uppercase text-[16px] pb-[10px]">The DDDM</p>
+          <p className="uppercase text-[16px] pb-[10px]">{dddmLabel}</p>
           <h2 className="md:text-[54px] text-[32px] font-bold leading-[100%]">
-            We Design,
+            {designLabel}
             <br />
-            Develop, Deliver
+            {developLabel}
             <br />
-            and Maintain
+            {maintainLabel}
           </h2>
         </div>
 
         <div className="md:w-[640px] w-full md:text-[20px] mt-[24px]  md:leading-[24px] leading-[18px] md:mt-0 text-[15px]">
-          <p>
-            From <span className="font-bold">concept to launch</span>, we
-            provide reliable{" "}
-            <span className="font-bold">full-stack development services</span>.
-            Our team specializes in <span className="font-bold">designing</span>
-            , <span className="font-bold">building</span>, and maintaining
-            high-quality MVPs and scalable applications,{" "}
-            <span className="font-bold">bringing your vision</span>to life
-          </p>
+          <p>{descriptionText}</p>
         </div>
       </div>
       <div className="md:px-[100px] px-[24px] mx-auto max-w-[1536px] tracking-[-1%] flex md:flex-row flex-col justify-between md:items-center ">
         <div>
           <h3 className="font-medium md:text-[27px] text-[16px] mb-6">
-            The Roadmap
+            {roadmapLabel}
           </h3>
           <div className="flex flex-col flex-nowrap items-start">
-            {data.map((item, index) => (
+            {translatedData.map((item, index) => (
               <RoadmapElement
                 key={index}
                 title={item.title}
                 description={item.description}
                 color={item.color}
-                endElement={index === data.length - 1}
+                endElement={index === translatedData.length - 1}
               />
             ))}
           </div>

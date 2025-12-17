@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import Navbar from "~/components/ui/navbar";
 import { dmMono, spaceGrotesk } from "~/config/font";
 import FooterSection from "~/components/footer";
+import { LanguageProvider } from "~/contexts/LanguageContext";
+import { CookieBanner } from "~/components/ui/cookie-banner";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -69,9 +71,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${dmMono.variable}`}>
       <body className="font-sans antialiased dark bg-background">
-        
-        {children}
-        
+        <LanguageProvider>
+          {children}
+          <CookieBanner />
+        </LanguageProvider>
       </body>
     </html>
   );

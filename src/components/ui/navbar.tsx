@@ -6,12 +6,22 @@ import NavLink from "../shared";
 import { AlignJustify } from "lucide-react";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
+import { LanguageSelector } from "./language-selector";
+import { useTranslation } from "~/hooks/useTranslation";
 
 const Navbar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
   const [openSideBar, setOpenSideBar] = useState(false);
-  const links = ["Our Projects", "Services", "News", "About Us"];
+  
+  const ourProjectsLabel = useTranslation("Our Projects");
+  const servicesLabel = useTranslation("Services");
+  const newsLabel = useTranslation("News");
+  const aboutUsLabel = useTranslation("About Us");
+  const letsTalkLabel = useTranslation("Let's talk");
+  const navigateLabel = useTranslation("Navigate");
+  
+  const links = [ourProjectsLabel, servicesLabel, newsLabel, aboutUsLabel];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,7 +43,7 @@ const Navbar = () => {
           openSideBar ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <p className="text-[60px] font-bold">Navigate</p>
+        <p className="text-[60px] font-bold">{navigateLabel}</p>
         <div>
           <ul className="pt-[40px]">
             {links.map((link, index) => {
@@ -102,12 +112,15 @@ const Navbar = () => {
               })}
             </ul>
 
-            <Link
-              href="#contact"
-              className="font-sans flex flex-center bg-white hover:bg-neutral-300 text-black w-[102px] h-[36px] font-[700] text-[16px] rounded-[4px]"
-            >
-              Let's talk
-            </Link>
+            <div className="flex items-center gap-3">
+              <LanguageSelector />
+              <Link
+                href="#contact"
+                className="font-sans flex flex-center bg-white hover:bg-neutral-300 text-black w-[102px] h-[36px] font-[700] text-[16px] rounded-[4px]"
+              >
+                {letsTalkLabel}
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
